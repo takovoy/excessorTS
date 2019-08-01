@@ -21,16 +21,29 @@ export namespace ExcessorCommon {
         }
     }
 
+    export function setContext (context: CanvasRenderingContext2D, value: Architecture.ContextSettings) {
+        for (const key of Object.keys(value)) {
+            if (!contextChangeWorkers[key] || !value[key])continue;
+            contextChangeWorkers[key](context, value[key]);
+        }
+    }
+
     export function clearContext (context: CanvasRenderingContext2D) {
         for (const key of Object.keys(contextClearingWorkers)) {
             contextClearingWorkers[key](context);
         }
     }
 
-    export function setContext (context: CanvasRenderingContext2D, value) {
+    export function setStyles (svgElement: SVGElement, value: Architecture.ContextSettings) {
         for (const key of Object.keys(value)) {
-            if (!contextChangeWorkers[key] || !value[key])continue;
-            contextChangeWorkers[key](context, value[key]);
+            if (!styleChangeWorkers[key] || !value[key]) continue;
+            styleChangeWorkers[key](svgElement, value[key]);
+        }
+    }
+
+    export function clearStyles (svgElement: SVGElement) {
+        for (const key of Object.keys(styleClearingWorkers)) {
+            styleClearingWorkers[key](svgElement);
         }
     }
 
@@ -58,5 +71,25 @@ export namespace ExcessorCommon {
         lineDash: (context) => contextChangeWorkers.lineDash(context, []),
         dashOffset: (context) => contextChangeWorkers.dashOffset(context, 0),
         stroke: (context) => contextChangeWorkers.stroke(context, 'transparent')
+    };
+
+    export const styleChangeWorkers: Architecture.StyleChangeWorkers = {
+        fill: (svgElement, value: string) => svgElement.setAttribute('fill', value),
+        lineWidth: (svgElement, value: number) => svgElement.setAttribute('stroke-width', value.toString()),
+        lineCap: (svgElement, value: 'butt' | 'round' | 'square') => svgElement.setAttribute('stroke-linecap', value),
+        lineJoin: (svgElement, value: 'bevel' | 'round' | 'miter') => svgElement.setAttribute('stroke-linejoin', value),
+        lineDash: (svgElement, value: number[]) => svgElement.setAttribute('stroke-dasharray', value.join(' ')),
+        dashOffset: (svgElement, value: number) => svgElement.setAttribute('stroke-dashoffset', value.toString()),
+        stroke: (svgElement, value: string) => svgElement.setAttribute('stroke', value)
+    };
+
+    export const styleClearingWorkers: Architecture.StyleClearingWorkers = {
+        fill: (svgElement) => styleChangeWorkers.fill(svgElement, 'transparent'),
+        lineWidth: (svgElement) => styleChangeWorkers.lineWidth(svgElement, 0),
+        lineCap: (svgElement) => styleChangeWorkers.lineCap(svgElement, 'butt'),
+        lineJoin: (svgElement) => styleChangeWorkers.lineJoin(svgElement, 'miter'),
+        lineDash: (svgElement) => styleChangeWorkers.lineDash(svgElement, []),
+        dashOffset: (svgElement) => styleChangeWorkers.dashOffset(svgElement, 0),
+        stroke: (svgElement) => styleChangeWorkers.stroke(svgElement, 'transparent')
     };
 }

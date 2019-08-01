@@ -18,5 +18,9 @@ export class Circle extends VectorObject implements Architecture.ICircle {
         context.arc(this.x, this.y, this.state.radius, radian, Math.PI * 2 / 100 * this.state.shift + radian);
     }
 
-    public renderSVG() {}
+    public renderSVG() {
+        this.SVGDOMObject.setAttribute('cx', this.state.x);
+        this.SVGDOMObject.setAttribute('cy', this.state.y);
+        this.SVGDOMObject.setAttribute('r', this.state.radius);
+    }
 }

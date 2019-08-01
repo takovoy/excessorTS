@@ -9,9 +9,12 @@ export namespace ExcessorArchitecture {
         stroke = 'stroke'
     }
 
-    export type ContextChangeWorkers = {[key in AvailableContextSettings]: (context: CanvasRenderingContext2D, value: any) => void};
+    export type ContextSetting = string | number | number[];
+    export type ContextSettings = {[key in AvailableContextSettings]?: ContextSetting};
+    export type ContextChangeWorkers = {[key in AvailableContextSettings]: (context: CanvasRenderingContext2D, value: ContextSetting) => void};
     export type ContextClearingWorkers = {[key in AvailableContextSettings]: (context: CanvasRenderingContext2D) => void};
-    export type ContextSettings = {[key in AvailableContextSettings]?: string | number | number[]};
+    export type StyleChangeWorkers = {[key in AvailableContextSettings]: (svgElement: SVGElement, value: ContextSetting) => void};
+    export type StyleClearingWorkers = {[key in AvailableContextSettings]: (svgElement: SVGElement) => void};
 
     export interface IList<ItemType> {
         list: {[key: string]: ItemType};
