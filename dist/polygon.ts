@@ -3,6 +3,7 @@ import { TRIGONOMETRY } from '../trigonometry';
 import { VectorObject } from './vector-object';
 
 export class Polygon extends VectorObject implements Architecture.IPolygon {
+    public SVGDOMObject: SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
     constructor(options: Architecture.IPolygonOptions) {
         super(options);
         this.state.sidesCount = options.sidesCount || 3;
@@ -26,4 +27,6 @@ export class Polygon extends VectorObject implements Architecture.IPolygon {
         }
         context.lineTo(start[0], start[1]);
     }
+
+    public renderSVG() {}
 }

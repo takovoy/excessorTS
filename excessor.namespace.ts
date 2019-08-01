@@ -69,7 +69,7 @@ export namespace ExcessorArchitecture {
         y: number;
         radian: number;
         renderCanvas(context: CanvasRenderingContext2D);
-        renderSVG(context: SVGElement);
+        renderSVG();
         append(object: IVectorObject<OptionsBundle>);
         remove(object: IVectorObject<OptionsBundle>);
     }

@@ -3,6 +3,7 @@ import { TRIGONOMETRY } from '../trigonometry';
 import { Line } from './line';
 
 export class Curve extends Line implements Architecture.ILine {
+    public SVGDOMObject = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     public get points() {
         if (!this.services.points) {
             this.services.points = [];
@@ -51,4 +52,6 @@ export class Curve extends Line implements Architecture.ILine {
             context.lineTo(coord[0] + center[0], coord[1] + center[1]);
         }
     }
+
+    public renderSVG() {}
 }

@@ -3,6 +3,7 @@ import { TRIGONOMETRY } from '../trigonometry';
 import { VectorObject } from './vector-object';
 
 export class Ellipse extends VectorObject implements Architecture.IEllipse {
+    public SVGDOMObject = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
     constructor(options: Architecture.IEllipseOptions) {
         super(options);
         this.state.step = options.step || 0.1;
@@ -28,4 +29,6 @@ export class Ellipse extends VectorObject implements Architecture.IEllipse {
         }
         context.lineTo(coord[0], coord[1]);
     }
+
+    public renderSVG() {}
 }

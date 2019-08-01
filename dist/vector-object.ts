@@ -3,14 +3,18 @@ import { ExcessorArchitecture as Architecture } from '../excessor.namespace';
 
 export class VectorObject implements Architecture.IVectorObject<Architecture.IVectorObjectOptions> {
     public id = '' + Math.random();
-    public SVGDOMObject = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    public SVGDOMObject: SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     public children = new Common.List(
-        (self, object) => {
-            object.parent = this;
-            this.operationContext = object;
-            return this;
+        (parent, instance) => {
+            instance.parent = parent;
+            parent.SVGDOMObject.appendChild(instance.SVGDOMObject);
+            parent.operationContext = instance;
+            return parent;
         },
-        (self) => this,
+        (parent, instance) => {
+            instance.SVGDOMObject.remove();
+            return parent;
+        },
         this
     );
     public parent;
@@ -63,7 +67,7 @@ export class VectorObject implements Architecture.IVectorObject<Architecture.IVe
     }
 
     public renderCanvas(context) {};
-    public renderSVG(context) {};
+    public renderSVG() {};
 
     public append(object) {
         return this.children.append(object);

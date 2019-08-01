@@ -39,7 +39,7 @@ export class Draw implements Architecture.IDraw {
     }
 
     public renderSVGObject(vectorObject) {
-        vectorObject.renderSVG && vectorObject.renderSVG(vectorObject.SVGDOMObject);
+        vectorObject.renderSVG();
         for (const key of Object.keys(vectorObject.children.list)) {
             this.renderSVGObject(vectorObject.children.list[key]);
         }

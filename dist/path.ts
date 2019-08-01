@@ -3,6 +3,7 @@ import { TRIGONOMETRY } from '../trigonometry';
 import { Line } from './line';
 
 export class Path extends Line implements Architecture.ILine {
+    public SVGDOMObject: SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     public get points() {
         if (!this.services.points) {
             this.services.points = [];
@@ -80,4 +81,6 @@ export class Path extends Line implements Architecture.ILine {
             }
         }
     }
+
+    public renderSVG() {}
 }

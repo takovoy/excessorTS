@@ -3,6 +3,7 @@ import { TRIGONOMETRY } from '../trigonometry';
 import { VectorObject } from './vector-object';
 
 export class Line extends VectorObject implements Architecture.ILine {
+    public SVGDOMObject: SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     public get points() {
         if (!this.services.points) {
             this.services.points = [];
@@ -62,4 +63,6 @@ export class Line extends VectorObject implements Architecture.ILine {
             context.lineTo(coord[0] + this.x, coord[1] + this.y);
         }
     }
+
+    public renderSVG() {}
 }

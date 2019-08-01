@@ -3,6 +3,7 @@ import { TRIGONOMETRY } from '../trigonometry';
 import { VectorObject } from './vector-object';
 
 export class Rect extends VectorObject implements Architecture.IRect {
+    public SVGDOMObject = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     constructor(options: Architecture.IRectOptions) {
         super(options);
         this.state.width = this.state.width || options.width || 0;
@@ -21,4 +22,6 @@ export class Rect extends VectorObject implements Architecture.IRect {
         context.lineTo(coord[0], coord[1]);
         context.lineTo(this.x, this.y);
     }
+
+    public renderSVG() {}
 }
