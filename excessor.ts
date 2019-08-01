@@ -1,0 +1,10 @@
+export { Draw } from './dist/draw';
+export { Circle } from './dist/circle';
+export { Curve } from './dist/curve';
+export { Ellipse } from './dist/ellipse';
+export { Line } from './dist/line';
+export { Path } from './dist/path';
+export { Polygon } from './dist/polygon';
+export { Rect } from './dist/rect';
+export { Spline } from './dist/spline';
+export { VectorObject } from './dist/vector-object';
