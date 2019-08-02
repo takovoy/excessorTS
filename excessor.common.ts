@@ -23,7 +23,7 @@ export namespace ExcessorCommon {
 
     export function setContext (context: CanvasRenderingContext2D, value: Architecture.ContextSettings) {
         for (const key of Object.keys(value)) {
-            if (!contextChangeWorkers[key] || !value[key])continue;
+            if (!contextChangeWorkers[key] || !value[key]) continue;
             contextChangeWorkers[key](context, value[key]);
         }
     }

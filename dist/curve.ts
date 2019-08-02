@@ -3,7 +3,7 @@ import { TRIGONOMETRY } from '../trigonometry';
 import { Line } from './line';
 
 export class Curve extends Line implements Architecture.ILine {
-    public SVGDOMObject = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    public SVGDOMObject = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
     public get points() {
         if (!this.services.points) {
             this.services.points = [];
@@ -46,12 +46,32 @@ export class Curve extends Line implements Architecture.ILine {
         for (let i = 0; i <= this.state.shift; i += this.state.step) {
             const coord = TRIGONOMETRY.getPointOnCurve(i, points);
             if (Math.abs(lastPoint[0] - coord[0]) < 1 && Math.abs(lastPoint[1] - coord[1]) < 1) {
-                continue
+                continue;
             }
             lastPoint = coord;
             context.lineTo(coord[0] + center[0], coord[1] + center[1]);
         }
     }
 
-    public renderSVG() {}
+    public renderSVG() {
+        const points = this.points;
+        const center = [this.x, this.y];
+        if (points.length < 2) {
+            return
+        }
+        const path: string[] = [`${points[0][0] + center[0]},${points[0][1] + center[1]}`];
+        if (this.state.shift > 100) {
+            this.state.shift = 100;
+        }
+        let lastPoint = points[0];
+        for (let i = 0; i <= this.state.shift; i += this.state.step) {
+            const coord = TRIGONOMETRY.getPointOnCurve(i, points);
+            if (Math.abs(lastPoint[0] - coord[0]) < 1 && Math.abs(lastPoint[1] - coord[1]) < 1) {
+                continue;
+            }
+            lastPoint = coord;
+            path.push(`${coord[0] + center[0]},${coord[1] + center[1]}`);
+        }
+        this.SVGDOMObject.setAttribute('points', path.join(' '));
+    }
 }

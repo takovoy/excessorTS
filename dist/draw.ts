@@ -6,7 +6,7 @@ export class Draw implements Architecture.IDraw {
     public SVGDOMObject = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     public canvasContext = this.CanvasDOMObject.getContext('2d');
     public stack = new Common.List();
-    constructor(width, height) {
+    constructor(width: number, height: number) {
         this.CanvasDOMObject.width = width || 0;
         this.CanvasDOMObject.height = height || 0;
         this.SVGDOMObject.setAttribute('viewBox', `0 0 ${width} ${height}`);

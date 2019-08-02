@@ -30,5 +30,10 @@ export class Ellipse extends VectorObject implements Architecture.IEllipse {
         context.lineTo(coord[0], coord[1]);
     }
 
-    public renderSVG() {}
+    public renderSVG() {
+        this.SVGDOMObject.setAttribute('cx', this.state.x);
+        this.SVGDOMObject.setAttribute('cy', this.state.y);
+        this.SVGDOMObject.setAttribute('rx', this.state.semiAxisX);
+        this.SVGDOMObject.setAttribute('ry', this.state.semiAxisY);
+    }
 }
