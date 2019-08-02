@@ -3,7 +3,7 @@ import { TRIGONOMETRY } from '../trigonometry';
 import { VectorObject } from './vector-object';
 
 export class Line extends VectorObject implements Architecture.ILine {
-    public SVGDOMObject: SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    public SVGDOMObject: SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
     public get points() {
         if (!this.services.points) {
             this.services.points = [];
@@ -64,5 +64,25 @@ export class Line extends VectorObject implements Architecture.ILine {
         }
     }
 
-    public renderSVG() {}
+    public renderSVG() {
+        const points = this.points;
+        const center = [this.x, this.y];
+        if (points.length < 2) {
+            return
+        }
+        const path: string[] = [`${points[0][0] + center[0]},${points[0][1] + center[1]}`];
+        if (this.state.shift > 100) {
+            this.state.shift = 100;
+        }
+        let lastPoint = points[0];
+        for (let i = 0; i <= this.state.shift; i += this.state.step) {
+            const coord = TRIGONOMETRY.getPointOnLine(i, this.points);
+            if (Math.abs(lastPoint[0] - coord[0]) < 1 && Math.abs(lastPoint[1] - coord[1]) < 1) {
+                continue
+            }
+            lastPoint = coord;
+            path.push(`${coord[0] + this.x},${coord[1] + this.y}`);
+        }
+        this.SVGDOMObject.setAttribute('points', path.join(' '));
+    }
 }

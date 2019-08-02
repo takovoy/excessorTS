@@ -3,7 +3,7 @@ import { TRIGONOMETRY } from '../trigonometry';
 import { VectorObject } from './vector-object';
 
 export class Rect extends VectorObject implements Architecture.IRect {
-    public SVGDOMObject = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    public SVGDOMObject = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
     constructor(options: Architecture.IRectOptions) {
         super(options);
         this.state.width = this.state.width || options.width || 0;
@@ -23,5 +23,17 @@ export class Rect extends VectorObject implements Architecture.IRect {
         context.lineTo(this.x, this.y);
     }
 
-    public renderSVG() {}
+    public renderSVG() {
+        const radian = this.radian;
+        let coord  = [this.x, this.y];
+        const path: string[] = [`${coord[0]},${coord[1]}`];
+        coord = TRIGONOMETRY.getPointOnCircle(radian, this.state.width, coord[0], coord[1]);
+        path.push(coord.join(','));
+        coord = TRIGONOMETRY.getPointOnCircle(radian + Math.PI / 2, this.state.height, coord[0], coord[1]);
+        path.push(coord.join(','));
+        coord = TRIGONOMETRY.getPointOnCircle(radian + Math.PI / 2, this.state.height, this.x, this.y);
+        path.push(coord.join(','));
+        path.push(`${this.x},${this.y}`);
+        this.SVGDOMObject.setAttribute('points', path.join(' '));
+    }
 }

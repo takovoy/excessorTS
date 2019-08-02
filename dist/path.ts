@@ -60,8 +60,6 @@ export class Path extends Line implements Architecture.ILine {
             paths[pathIndex].push(points[index]);
         }
         for (pathIndex = 0; paths[pathIndex]; pathIndex++) {
-            const path = paths[pathIndex];
-
             let toMovePoint = points[0];
             if (toMovePoint.length > 3) {
                 toMovePoint = [0, 0];
@@ -82,5 +80,44 @@ export class Path extends Line implements Architecture.ILine {
         }
     }
 
-    public renderSVG() {}
+    public renderSVG() {
+        const points = this.points;
+        const center = [this.x, this.y];
+        if (points.length < 2) {
+            return
+        }
+        if (this.state.shift > 100) {
+            this.state.shift = 100;
+        }
+
+        const path: string[] = [`M${points[0][0] + center[0]},${points[0][1] + center[1]}`];
+        const paths = [[]];
+        let pathIndex = 0;
+        for (let index = 0; points[index]; index++) {
+            if (points[index] === false) {
+                if (points[index + 1] && points[index + 1].length <= 3) {
+                    pathIndex++;
+                }
+                continue;
+            }
+            paths[pathIndex].push(points[index]);
+        }
+        for (pathIndex = 0; paths[pathIndex]; pathIndex++) {
+            let toMovePoint = points[0];
+            if (toMovePoint.length > 3) {
+                toMovePoint = [0, 0];
+            }
+            path.push(`m${toMovePoint[0]},${toMovePoint[1]}`);
+            let lastPoint = points[0];
+            for (let i = 0; i <= this.state.shift; i += this.state.step) {
+                const coord = TRIGONOMETRY.getPointOnPath(i, points, this.services);
+                if (Math.abs(lastPoint[0] - coord[0]) < 1 && Math.abs(lastPoint[1] - coord[1]) < 1) {
+                    continue
+                }
+                lastPoint = coord;
+                path.push(`l${coord[0]},${coord[1]}`);
+            }
+        }
+        this.SVGDOMObject.setAttribute('d', path.join(''));
+    }
 }

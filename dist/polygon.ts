@@ -28,5 +28,21 @@ export class Polygon extends VectorObject implements Architecture.IPolygon {
         context.lineTo(start[0], start[1]);
     }
 
-    public renderSVG() {}
+    public renderSVG() {
+        if (this.state.sidesCount < 3) {
+            return false;
+        }
+        const start = TRIGONOMETRY.getPointOnCircle(this.radian, this.state.radius, this.x, this.y);
+        const path: string[] = [`${start[0]},${start[1]}`];
+        for (let i = 0; i < this.state.sidesCount; i++) {
+            const coordinate = TRIGONOMETRY.getPointOnCircle(
+                Math.PI * 2 / this.state.sidesCount * i + this.radian,
+                this.state.radius,
+                this.x,
+                this.y
+            );
+            path.push(`${coordinate[0]},${coordinate[1]}`);
+        }
+        this.SVGDOMObject.setAttribute('points', path.join(' '));
+    }
 }

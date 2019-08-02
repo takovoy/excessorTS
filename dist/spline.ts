@@ -71,5 +71,40 @@ export class Spline extends Line implements Architecture.ILine {
         }
     }
 
-    public renderSVG() {}
+    public renderSVG() {
+        const points = this.points;
+        const center = [this.x, this.y];
+        if (points.length < 2) {
+            return
+        }
+        if (this.state.shift > 100) {
+            this.state.shift = 100;
+        }
+
+        const path: string[] = [`M${points[0][0] + center[0]},${points[0][1] + center[1]}`];
+        const splines = [[]];
+        let splineIndex = 0;
+        for (let index = 0; points[index]; index++) {
+            if (points[index] === false) {
+                splineIndex++;
+                continue;
+            }
+            splines[splineIndex].push(points[index]);
+        }
+
+        for (splineIndex = 0; splines[splineIndex]; splineIndex++) {
+            const spline = splines[splineIndex];
+            path.push(`m${spline[0][0]},${spline[0][1]}`);
+            let lastPoint = spline[0];
+            for (let shift = 0; shift <= this.state.shift; shift += this.state.step) {
+                const coord = TRIGONOMETRY.getPointOnSpline(shift, spline, this.services);
+                if (Math.abs(lastPoint[0] - coord[0]) < 1 && Math.abs(lastPoint[1] - coord[1]) < 1) {
+                    continue;
+                }
+                lastPoint = coord;
+                path.push(`l${coord[0]},${coord[1]}`);
+            }
+        }
+        this.SVGDOMObject.setAttribute('d', path.join(''));
+    }
 }
